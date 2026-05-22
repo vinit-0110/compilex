@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background glow gradient -->
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0" />
+    </radialGradient>
+    
+    <!-- Python Blue gradient -->
+    <linearGradient id="python-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+
+    <!-- Python Yellow gradient -->
+    <linearGradient id="python-yellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Neon Accent purple gradient -->
+    <linearGradient id="accent-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    
+    <!-- Hexagon Border Gradient -->
+    <linearGradient id="hex-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ambient Glow Background -->
+  <circle cx="256" cy="256" r="240" fill="url(#glow)" />
+
+  <!-- Outer Hexagon Frame -->
+  <polygon points="256,40 436,144 436,368 256,472 76,368 76,144" 
+           fill="#0B0F19" 
+           stroke="url(#hex-grad)" 
+           stroke-width="12" 
+           stroke-linejoin="round" />
+
+  <!-- Inner Hexagon Shading -->
+  <polygon points="256,56 420,154 420,358 256,456 92,358 92,154" 
+           fill="#0F172A" 
+           opacity="0.8" />
+
+  <!-- The "X" styled like interlocking Python snakes / Compiler elements -->
+  <g transform="translate(146, 146)">
+    <!-- Top-Left to Bottom-Right Line (Blue Snake) -->
+    <path d="M 20 20 L 200 200" 
+          stroke="url(#python-blue)" 
+          stroke-width="32" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+          
+    <!-- Bottom-Left to Top-Right Line (Yellow/Orange Snake) -->
+    <path d="M 20 200 L 95 125" 
+          stroke="url(#python-yellow)" 
+          stroke-width="32" 
+          stroke-linecap="round" />
+    <path d="M 125 95 L 200 20" 
+          stroke="url(#python-yellow)" 
+          stroke-width="32" 
+          stroke-linecap="round" />
+  </g>
+
+  <!-- Code brackets symbols on the sides (futuristic coder vibe) -->
+  <!-- Left Bracket < -->
+  <path d="M 120 216 L 80 256 L 120 296" 
+        fill="none" 
+        stroke="url(#accent-purple)" 
+        stroke-width="10" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Right Bracket > -->
+  <path d="M 392 216 L 432 256 L 392 296" 
+        fill="none" 
+        stroke="url(#accent-purple)" 
+        stroke-width="10" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Compiler Center Glow Play button symbol -->
+  <polygon points="244,226 244,286 289,256" 
+           fill="#FFFFFF" 
+           stroke="#0B0F19" 
+           stroke-width="4" 
+           stroke-linejoin="round" />
+</svg>

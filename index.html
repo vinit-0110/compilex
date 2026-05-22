@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CompileX - Online Python IDE & Compiler</title>
+  <meta name="description" content="A professional, high-performance online Python compiler and IDE. Run python code directly in your browser with full package support (NumPy, Pandas), error tracking, and a split-screen terminal layout.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="apple-touch-icon" href="logo.svg">
+  
+  <!-- Font Families (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-logo">
+        <img src="logo.svg" alt="CompileX Logo" class="brand-logo-img">
+        <span class="brand-name">Compile<span class="accent-text">X</span></span>
+      </div>
+      
+      <!-- Engine Status & Package Badges -->
+      <div class="engine-info">
+        <div class="status-badge loading" id="engine-status">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <span class="status-text">Booting Engine...</span>
+        </div>
+        
+        <button class="icon-btn btn-settings" id="btn-env-manager" title="Python Environment Packages">
+          <i class="fa-solid fa-cubes"></i>
+          <span>Packages</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace (Can toggle split mode) -->
+    <main class="app-workspace" id="workspace">
+      
+      <!-- Code Editor Section -->
+      <section class="pane editor-pane" id="editor-pane">
+        <!-- Editor Header Panel -->
+        <div class="pane-header">
+          <div class="pane-title">
+            <i class="fa-brands fa-python python-icon"></i>
+            <span>main.py</span>
+          </div>
+          <div class="pane-actions">
+            <!-- Run Code Button -->
+            <button class="action-btn btn-run" id="btn-run" disabled>
+              <i class="fa-solid fa-play"></i>
+              <span>Run Code</span>
+            </button>
+            
+            <!-- Clear Editor Button -->
+            <button class="action-btn btn-clear" id="btn-clear" title="Clear Editor">
+              <i class="fa-solid fa-trash-can"></i>
+              <span>Clear</span>
+            </button>
+            
+            <!-- Reset Template Button -->
+            <button class="action-btn btn-reset" id="btn-reset" title="Reset Code Template">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Code Editor Wrapper -->
+        <div class="editor-wrapper">
+          <div id="monaco-editor-container"></div>
+          
+          <!-- Loading overlay for Monaco Editor Initialization -->
+          <div class="editor-loader" id="editor-loader">
+            <div class="pulse-loader"></div>
+            <span>Loading Coder Workspace...</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Terminal Output Section (Initially hidden via JS/CSS layout, shown on Run) -->
+      <section class="pane console-pane" id="console-pane" style="display: none;">
+        <!-- Console Header Panel -->
+        <div class="pane-header">
+          <div class="pane-title">
+            <i class="fa-solid fa-terminal console-icon"></i>
+            <span>Console Output</span>
+          </div>
+          <div class="pane-actions">
+            <button class="action-btn btn-console-clear" id="btn-console-clear" title="Clear Terminal Output">
+              <i class="fa-solid fa-ban"></i>
+              <span>Clear Output</span>
+            </button>
+            
+            <button class="action-btn btn-console-copy" id="btn-console-copy" title="Copy Output to Clipboard">
+              <i class="fa-solid fa-copy"></i>
+              <span>Copy</span>
+            </button>
+            
+            <!-- Close Split Output Button -->
+            <button class="action-btn btn-console-close" id="btn-console-close" title="Close Split Console">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Terminal Output Screen -->
+        <div class="console-body" id="console-body">
+          <div class="console-welcome" id="console-welcome">
+            <i class="fa-brands fa-python welcome-logo"></i>
+            <h3>CompileX Interactive Terminal</h3>
+            <p>Your Python execution output, standard inputs, and tracebacks will display here.</p>
+          </div>
+          <div class="console-terminal-lines" id="console-lines"></div>
+        </div>
+      </section>
+      
+    </main>
+
+    <!-- Packages & Settings Drawer/Modal -->
+    <div class="modal-backdrop" id="packages-modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3><i class="fa-solid fa-cubes"></i> Python Packages Manager</h3>
+          <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">
+            CompileX runs Pyodide WebAssembly. You can load popular scientific and data structures packages, or install pure-Python packages directly from PyPI.
+          </p>
+          
+          <div class="packages-section">
+            <h4>Popular Libraries (Loaded from CDN)</h4>
+            <div class="packages-grid">
+              <label class="pkg-card">
+                <input type="checkbox" class="pkg-checkbox" value="numpy" id="pkg-numpy">
+                <span class="pkg-info">
+                  <span class="pkg-name">NumPy</span>
+                  <span class="pkg-desc">Scientific computing, multi-dimensional arrays.</span>
+                </span>
+              </label>
+              
+              <label class="pkg-card">
+                <input type="checkbox" class="pkg-checkbox" value="pandas" id="pkg-pandas">
+                <span class="pkg-info">
+                  <span class="pkg-name">Pandas</span>
+                  <span class="pkg-desc">Data analysis and dataframes.</span>
+                </span>
+              </label>
+
+              <label class="pkg-card">
+                <input type="checkbox" class="pkg-checkbox" value="sympy" id="pkg-sympy">
+                <span class="pkg-info">
+                  <span class="pkg-name">SymPy</span>
+                  <span class="pkg-desc">Symbolic mathematics and algebra.</span>
+                </span>
+              </label>
+              
+              <label class="pkg-card">
+                <input type="checkbox" class="pkg-checkbox" value="scipy" id="pkg-scipy">
+                <span class="pkg-info">
+                  <span class="pkg-name">SciPy</span>
+                  <span class="pkg-desc">Algorithms for science and engineering.</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="custom-pypi-section">
+            <h4>Install Arbitrary Package (via PyPI)</h4>
+            <p class="section-desc-small">Install any pure Python library (e.g. <code>requests</code> is not supported since it does direct HTTP sockets, but things like <code>six</code>, <code>pytz</code>, <code>rsa</code> work perfectly!).</p>
+            <div class="pypi-input-group">
+              <input type="text" id="pypi-pkg-name" placeholder="Enter package name (e.g., pytz)">
+              <button class="btn-primary" id="btn-install-pypi">
+                <i class="fa-solid fa-download"></i> Install
+              </button>
+            </div>
+            <div class="install-status-msg" id="install-status-msg"></div>
+          </div>
+
+          <div class="installed-list-section">
+            <h4>Active Environment Libraries</h4>
+            <ul class="installed-list" id="installed-list">
+              <li><i class="fa-solid fa-check text-green"></i> <span>Python Standard Library (sys, math, json, datetime, etc.)</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="btn-modal-close-action">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error/Notification Toast -->
+    <div class="toast-container" id="toast-container"></div>
+    
+  </div>
+
+  <!-- Monaco Editor AMD Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+  
+  <!-- Pyodide Loader -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  
+  <!-- Application JS Code -->
+  <script src="app.js"></script>
+</body>
+</html>
